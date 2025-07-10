@@ -440,14 +440,14 @@ namespace InventoryWpfApp
             {
                 string query = @"
                     SELECT
-                        InvS.InventoryStockId,  -- <--- CAMBIO AQUÍ: Usar InvS
+                        InvS.InventoryStockId,
                         S.SizeValue
                     FROM
-                        InventoryStock InvS     -- <--- CAMBIO AQUÍ: Usar InvS como alias
+                        InventoryStock InvS
                     JOIN
                         Sizes S ON InvS.SizeId = S.SizeId
                     WHERE
-                        InvS.ProductId = @ProductId AND InvS.CurrentQuantity > 0 -- <--- CAMBIO AQUÍ: Usar InvS
+                        InvS.ProductId = @ProductId AND InvS.CurrentQuantity > 0
                     ORDER BY
                         S.SizeValue;";
                 SqlCommand command = new SqlCommand(query, connection);
