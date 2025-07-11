@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="InventoryWpfApp.Views.InventoryStockView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:InventoryWpfApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Inventory Stock Management" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Grid.Row="0" Grid.ColumnSpan="2"/>
+
+        <TextBlock Text="Product:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <ComboBox ItemsSource="{Binding Products}" SelectedValue="{Binding SelectedProductId}"
+                  DisplayMemberPath="Name" SelectedValuePath="ProductId"
+                  Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+
+        <TextBlock Text="Size:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <ComboBox ItemsSource="{Binding Sizes}" SelectedValue="{Binding SelectedSizeId}"
+                  DisplayMemberPath="SizeValue" SelectedValuePath="SizeId"
+                  Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+
+        <TextBlock Text="Current Quantity:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <TextBox Text="{Binding QuantityInput, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+
+        <TextBlock Text="Min Stock Limit:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <TextBox Text="{Binding MinStockLimitInput, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,15,0,10">
+            <Button Content="Add/Update Stock" Command="{Binding AddOrUpdateStockCommand}" Margin="5" Padding="10"/>
+            <Button Content="Update Selected" Command="{Binding UpdateStockCommand}" Margin="5" Padding="10"/>
+            <Button Content="Delete Selected" Command="{Binding DeleteStockCommand}" Margin="5" Padding="10"/>
+            <Button Content="Clear Selection" Command="{Binding ClearSelectionCommand}" Margin="5" Padding="10"/>
+        </StackPanel>
+
+        <TextBlock Text="{Binding Message}" Grid.Row="6" Grid.ColumnSpan="2" Margin="0,10,0,0"
+                   HorizontalAlignment="Center" Foreground="Blue" TextWrapping="Wrap"/>
+
+        <DataGrid ItemsSource="{Binding StockItems}" SelectedItem="{Binding SelectedStockItem}"
+                  AutoGenerateColumns="True" IsReadOnly="False" CanUserAddRows="False"
+                  Grid.Row="5" Grid.ColumnSpan="2" Margin="0,87,0,0"/>
+    </Grid>
+</UserControl>
