@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace InventoryWpfApp.Models
+﻿namespace InventoryWpfApp.Models
 {
     public class Movement
     {
@@ -8,13 +6,15 @@ namespace InventoryWpfApp.Models
         public DateTime MovementDate { get; set; }
         public string MovementType { get; set; }
         public int QuantityMoved { get; set; }
-        public int InventoryStockId { get; set; }
-        public string ProductName { get; set; } // From vw_InventoryWerehouseMovements
-        public string ProductSize { get; set; } // From vw_InventoryWerehouseMovements
-        public int? EmployeeId { get; set; } // Nullable if not always involved
-        public string EmployeeName { get; set; } // From vw_InventoryWerehouseMovements
-        public string EmployeeGroup { get; set; } // From vw_InventoryWerehouseMovements
-        public string EmployeeType { get; set; } // From vw_InventoryWerehouseMovements
+        public string ProductName { get; set; }
+        public string ProductDescription { get; set; }
+        public string ProductSize { get; set; }
+        public string SizeNotation { get; set; }
+        public int RemainingStock { get; set; }
+        public int MinStockLimit { get; set; }
+        public string EmployeeName { get; set; }
+        public string EmployeeGroup { get; set; } 
+        public string EmployeeType { get; set; }
         public string Notes { get; set; }
     }
 }

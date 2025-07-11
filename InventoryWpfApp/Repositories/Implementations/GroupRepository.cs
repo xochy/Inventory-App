@@ -2,11 +2,6 @@
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.Repositories.Helpers;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryWpfApp.Repositories.Implementations
 {

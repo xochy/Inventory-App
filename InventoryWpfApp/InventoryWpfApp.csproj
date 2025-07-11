@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Themes\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
 
