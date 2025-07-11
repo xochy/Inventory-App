@@ -195,8 +195,11 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void UpdateExistingStock(object parameter)
         {
-            if (SelectedStockItem == null) return;
-
+            if (SelectedStockItem is null)
+            {
+                Message = "No stock item selected for update.";
+                return;
+            }
             if (!int.TryParse(QuantityInput, out int currentQuantity) || currentQuantity < 0)
             {
                 Message = "Invalid current quantity. Must be a non-negative number.";

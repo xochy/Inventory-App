@@ -2,12 +2,7 @@
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
@@ -124,6 +119,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void AddEmployee(object parameter)
         {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(NewEmployeeName) || SelectedGroupId <= 0)
+            {
+                Message = "Please enter a valid employee name and select a group.";
+                return;
+            }
+
             try
             {
                 var newEmployee = new Employee { Name = NewEmployeeName, GroupId = SelectedGroupId };
@@ -146,16 +148,29 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void UpdateEmployee(object parameter)
         {
+            // Validate if an employee is selected and input is valid
+            if (SelectedEmployee is null)
+            {
+                Message = "Please select an employee to update.";
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewEmployeeName) || SelectedGroupId <= 0)
+            {
+                Message = "Please enter a valid employee name and select a group.";
+                return;
+            }
+
             try
             {
-                if (SelectedEmployee != null)
-                {
-                    SelectedEmployee.Name = NewEmployeeName;
-                    SelectedEmployee.GroupId = SelectedGroupId;
-                    _employeeRepository.Update(SelectedEmployee);
-                    LoadData(); // Refresh list
-                    Message = "Employee updated successfully.";
-                }
+                // Update the selected employee
+                SelectedEmployee.Name = NewEmployeeName;
+                SelectedEmployee.GroupId = SelectedGroupId;
+
+                _employeeRepository.Update(SelectedEmployee);
+                LoadData(); // Refresh list
+
+                Message = "Employee updated successfully.";
             }
             catch (Exception ex)
             {
