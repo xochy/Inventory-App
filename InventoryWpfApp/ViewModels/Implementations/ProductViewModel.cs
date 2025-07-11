@@ -2,12 +2,7 @@
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
@@ -123,6 +118,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void AddProduct(object parameter)
         {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(NewProductName) || string.IsNullOrWhiteSpace(NewProductDescription) || string.IsNullOrWhiteSpace(SelectedApplicabilityType))
+            {
+                Message = "Please enter valid product name, description and applicability type.";
+                return;
+            }
+
             try
             {
                 var newProduct = new Product
@@ -151,6 +153,19 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void UpdateProduct(object parameter)
         {
+            // Validate if a product is selected and input is valid
+            if (SelectedProduct is null)
+            {
+                Message = "Please select a product to update.";
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewProductName) || string.IsNullOrWhiteSpace(NewProductDescription) || string.IsNullOrWhiteSpace(SelectedApplicabilityType))
+            {
+                Message = "Please enter valid product name, description and applicability type.";
+                return;
+            }
+
             try
             {
                 if (SelectedProduct != null)

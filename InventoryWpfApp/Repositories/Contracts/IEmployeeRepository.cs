@@ -10,13 +10,13 @@ namespace InventoryWpfApp.Repositories.Contracts
         IEnumerable<Employee> GetAllWithGroupAndType();
     }
 
-    public interface IGroupRepository : IRepository<Group>
-    {
-        IEnumerable<Group> GetAllWithEmployeeType();
-    }
+    //public interface IGroupRepository : IRepository<Group>
+    //{
+    //    IEnumerable<Group> GetAllWithEmployeeType();
+    //}
 
-    public interface IEmployeeTypeRepository : IRepository<EmployeeType>
-    {
-        // No specific methods needed for now beyond basic CRUD
-    }
+    //public interface IEmployeeTypeRepository : IRepository<EmployeeType>
+    //{
+    //    // No specific methods needed for now beyond basic CRUD
+    //}
 }

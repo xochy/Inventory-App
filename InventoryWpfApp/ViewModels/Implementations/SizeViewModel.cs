@@ -2,12 +2,7 @@
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
@@ -111,6 +106,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void AddSize(object parameter)
         {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(NewSizeValue) || string.IsNullOrWhiteSpace(SelectedNotationType))
+            {
+                Message = "Please enter valid size value and notation type.";
+                return;
+            }
+
             try
             {
                 var newSize = new Size
@@ -137,6 +139,19 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         private void UpdateSize(object parameter)
         {
+            // Validate if a size is selected  and input is valid
+            if (SelectedSize is null)
+            {
+                Message = "Please select a size to update.";
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewSizeValue) || string.IsNullOrWhiteSpace(SelectedNotationType))
+            {
+                Message = "Please enter valid size value and notation type.";
+                return;
+            }
+
             try
             {
                 if (SelectedSize != null)
