@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace InventoryWpfApp.Repositories.Contracts
+﻿namespace InventoryWpfApp.Repositories.Contracts
 {
     public interface IRepository<T> where T : class
     {
