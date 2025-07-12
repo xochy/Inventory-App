@@ -1,6 +1,7 @@
 ﻿using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
+using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
@@ -123,6 +124,17 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        private MessageType _messageType;
+        public MessageType MessageType
+        {
+            get => _messageType;
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddOrUpdateStockCommand { get; private set; }
         public ICommand UpdateStockCommand { get; private set; } // For modifying only current quantity/min limit of existing record
         public ICommand DeleteStockCommand { get; private set; }
@@ -157,6 +169,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             catch (Exception ex)
             {
                 Message = $"Error loading data: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -165,11 +178,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (!int.TryParse(QuantityInput, out int quantity) || quantity <= 0)
             {
                 Message = "Invalid quantity. Must be a positive number.";
+                MessageType = MessageType.Error;
                 return;
             }
             if (!int.TryParse(MinStockLimitInput, out int minStockLimit) || minStockLimit < 0)
             {
                 Message = "Invalid min stock limit. Must be a non-negative number.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -179,10 +194,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 LoadData();
                 ClearSelection(null); // Clear fields and message
                 Message = "Stock added/updated successfully.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
                 Message = $"Error adding/updating stock: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -198,16 +215,19 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (SelectedStockItem is null)
             {
                 Message = "No stock item selected for update.";
+                MessageType = MessageType.Error;
                 return;
             }
             if (!int.TryParse(QuantityInput, out int currentQuantity) || currentQuantity < 0)
             {
                 Message = "Invalid current quantity. Must be a non-negative number.";
+                MessageType = MessageType.Error;
                 return;
             }
             if (!int.TryParse(MinStockLimitInput, out int minStockLimit) || minStockLimit < 0)
             {
                 Message = "Invalid min stock limit. Must be a non-negative number.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -219,10 +239,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 LoadData();
                 ClearSelection(null);
                 Message = "Stock item updated successfully.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
                 Message = $"Error updating stock item: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -241,11 +263,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
                     LoadData(); // Refresh list
                     ClearSelection(null);
                     Message = "Stock item deleted successfully.";
+                    MessageType = MessageType.Success;
                 }
             }
             catch (Exception ex)
             {
                 Message = $"Error deleting stock item: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -257,6 +281,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             QuantityInput = string.Empty;
             MinStockLimitInput = string.Empty;
             Message = string.Empty;
+            MessageType = MessageType.None; // Reset message type
         }
 
         private void UpdateStockFields()

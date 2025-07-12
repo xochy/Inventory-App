@@ -1,6 +1,7 @@
 ﻿using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
+using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -33,6 +34,17 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        private MessageType _messageType;
+        public MessageType MessageType
+        {
+            get => _messageType;
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand RefreshMovementsCommand { get; private set; }
 
         public MovementHistoryViewModel(IMovementRepository movementRepository)
@@ -54,10 +66,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
             {
                 Movements = new ObservableCollection<Movement>(_movementRepository.GetAllMovements());
                 Message = "Movement history refreshed.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
                 Message = $"Error loading movement history: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 

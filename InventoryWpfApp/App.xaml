@@ -1,8 +1,15 @@
 ﻿<Application x:Class="InventoryWpfApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:InventoryWpfApp">
+             xmlns:local="clr-namespace:InventoryWpfApp"
+             xmlns:converters="clr-namespace:InventoryWpfApp.Views.Converters">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/Styles.xaml"/>
+                <!-- ¡Añade esta línea! -->
+            </ResourceDictionary.MergedDictionaries>
+            <converters:MessageTypeToStyleConverter x:Key="MessageTypeToStyleConverter"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

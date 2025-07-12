@@ -1,6 +1,4 @@
 ﻿using InventoryWpfApp.Models;
-using InventoryWpfApp.Repositories.Contracts;
-using System.Collections.Generic;
 
 namespace InventoryWpfApp.Repositories.Contracts
 {
