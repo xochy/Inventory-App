@@ -67,6 +67,14 @@
 
         <!-- Employee List -->
         <DataGrid ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}"
-                  Grid.Row="5" Grid.ColumnSpan="2" Margin="0,20,0,0"/>
+                  Grid.Row="5" Grid.ColumnSpan="2" Margin="0,20,0,0" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Employee Id" Binding="{Binding EmployeeId}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Group Id" Binding="{Binding GroupId}" />
+                <DataGridTextColumn Header="Group Name" Binding="{Binding GroupName}" />
+                <DataGridTextColumn Header="Employee Type Name" Binding="{Binding EmployeeTypeName}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
