@@ -1,13 +1,16 @@
-﻿using InventoryWpfApp.Models;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
 {
+    /// <summary>
+    /// Represents the ViewModel for managing products in the inventory application.
+    /// </summary>
     public class ProductViewModel : BaseViewModel
     {
         private readonly IProductRepository _productRepository;
@@ -98,14 +101,22 @@ namespace InventoryWpfApp.ViewModels.Implementations
         public ICommand DeleteProductCommand { get; private set; }
         public ICommand ClearSelectionCommand { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the ProductViewModel class.
+        /// </summary>
+        /// <param name="productRepository">The repository for managing product data.</param>
         public ProductViewModel(IProductRepository productRepository)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _productRepository =
+                productRepository ?? throw new ArgumentNullException(nameof(productRepository));
 
             LoadData();
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Initializes the commands used in the ViewModel.
+        /// </summary>
         private void InitializeCommands()
         {
             AddProductCommand = new RelayCommand(AddProduct, CanAddProduct);
@@ -114,6 +125,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             ClearSelectionCommand = new RelayCommand(ClearSelection);
         }
 
+        /// <summary>
+        /// Loads the initial data for the ViewModel.
+        /// </summary>
         private void LoadData()
         {
             try
@@ -129,10 +143,18 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Adds a new product to the inventory.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void AddProduct(object parameter)
         {
             // Validate input
-            if (string.IsNullOrWhiteSpace(NewProductName) || string.IsNullOrWhiteSpace(NewProductDescription) || string.IsNullOrWhiteSpace(SelectedApplicabilityType))
+            if (
+                string.IsNullOrWhiteSpace(NewProductName)
+                || string.IsNullOrWhiteSpace(NewProductDescription)
+                || string.IsNullOrWhiteSpace(SelectedApplicabilityType)
+            )
             {
                 Message = "Please enter valid product name, description and applicability type.";
                 MessageType = MessageType.Error;
@@ -145,7 +167,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 {
                     Name = NewProductName,
                     Description = NewProductDescription,
-                    ApplicabilityType = SelectedApplicabilityType
+                    ApplicabilityType = SelectedApplicabilityType,
                 };
                 _productRepository.Add(newProduct);
                 LoadData(); // Refresh list
@@ -161,11 +183,20 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the AddProduct command can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private bool CanAddProduct(object parameter)
         {
-            return !string.IsNullOrWhiteSpace(NewProductName) && !string.IsNullOrWhiteSpace(SelectedApplicabilityType);
+            return !string.IsNullOrWhiteSpace(NewProductName)
+                && !string.IsNullOrWhiteSpace(SelectedApplicabilityType);
         }
 
+        /// <summary>
+        /// Updates the selected product in the inventory.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void UpdateProduct(object parameter)
         {
             // Validate if a product is selected and input is valid
@@ -176,7 +207,11 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(NewProductName) || string.IsNullOrWhiteSpace(NewProductDescription) || string.IsNullOrWhiteSpace(SelectedApplicabilityType))
+            if (
+                string.IsNullOrWhiteSpace(NewProductName)
+                || string.IsNullOrWhiteSpace(NewProductDescription)
+                || string.IsNullOrWhiteSpace(SelectedApplicabilityType)
+            )
             {
                 Message = "Please enter valid product name, description and applicability type.";
                 MessageType = MessageType.Error;
@@ -203,6 +238,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Deletes the selected product from the inventory.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void DeleteProduct(object parameter)
         {
             try
@@ -223,11 +262,19 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the Update or Delete commands can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private bool CanUpdateOrDeleteProduct(object parameter)
         {
             return SelectedProduct != null;
         }
 
+        /// <summary>
+        /// Clears the selection and resets the input fields.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void ClearSelection(object parameter)
         {
             SelectedProduct = null;
@@ -238,6 +285,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             MessageType = MessageType.None;
         }
 
+        /// <summary>
+        /// Updates the product fields based on the selected product.
+        /// </summary>
         private void UpdateProductFields()
         {
             if (SelectedProduct != null)
