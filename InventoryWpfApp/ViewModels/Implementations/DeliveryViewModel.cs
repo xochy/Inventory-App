@@ -1,6 +1,7 @@
 ﻿using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
+using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -107,8 +108,21 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        private MessageType _messageType;
+        public MessageType MessageType
+        {
+            get => _messageType;
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand RegisterDeliveryCommand { get; private set; }
         public ICommand ClearDeliveryFieldsCommand { get; private set; }
+        public ICommand RefreshEmployeesCommand { get; private set; }
+        public ICommand RefreshProductsCommand { get; private set; }
 
         public DeliveryViewModel(IMovementRepository movementRepository, IEmployeeRepository employeeRepository, IProductRepository productRepository, IInventoryStockRepository inventoryStockRepository)
         {
@@ -125,6 +139,35 @@ namespace InventoryWpfApp.ViewModels.Implementations
         {
             RegisterDeliveryCommand = new RelayCommand(RegisterDelivery, CanRegisterDelivery);
             ClearDeliveryFieldsCommand = new RelayCommand(ClearDeliveryFields);
+
+            RefreshEmployeesCommand = new RelayCommand(RefreshEmployees);
+            RefreshProductsCommand = new RelayCommand(RefreshProducts);
+        }
+
+        private void RefreshEmployees(object parameter = null)
+        {
+            try
+            {
+                Employees = new ObservableCollection<Employee>(_employeeRepository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing employees: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
+        }
+
+        private void RefreshProducts(object parameter = null)
+        {
+            try
+            {
+                Products = new ObservableCollection<Product>(_productRepository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing products: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
         }
 
         private void LoadData()
@@ -138,6 +181,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             catch (Exception ex)
             {
                 Message = $"Error loading initial data: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -153,6 +197,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 catch (Exception ex)
                 {
                     Message = $"Error loading available sizes: {ex.Message}";
+                    MessageType = MessageType.Error;
                 }
             }
             else
@@ -166,6 +211,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (!int.TryParse(QuantityToDeliver, out int quantity) || quantity <= 0)
             {
                 Message = "Invalid quantity. Must be a positive number.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -173,12 +219,14 @@ namespace InventoryWpfApp.ViewModels.Implementations
             {
                 _movementRepository.RegisterDelivery(SelectedInventoryStockId, SelectedEmployeeId, quantity);
                 Message = "Delivery registered successfully.";
+                MessageType = MessageType.Success;
                 ClearDeliveryFields(null);
                 // Optionally, trigger a refresh on MovementHistoryViewModel if it's visible.
             }
             catch (Exception ex)
             {
                 Message = $"Error registering delivery: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -195,7 +243,8 @@ namespace InventoryWpfApp.ViewModels.Implementations
             SelectedInventoryStockId = 0;
             QuantityToDeliver = string.Empty;
             AvailableSizes.Clear();
-            Message = string.Empty;
+            //Message = string.Empty;
+            //MessageType = MessageType.None; // Reset message type
         }
     }
 }

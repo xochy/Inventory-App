@@ -1,6 +1,7 @@
 ﻿using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
+using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -81,6 +82,17 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        private MessageType _messageType;
+        public MessageType MessageType
+        {
+            get => _messageType;
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddProductCommand { get; private set; }
         public ICommand UpdateProductCommand { get; private set; }
         public ICommand DeleteProductCommand { get; private set; }
@@ -113,6 +125,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             catch (Exception ex)
             {
                 Message = $"Error loading data: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -122,6 +135,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (string.IsNullOrWhiteSpace(NewProductName) || string.IsNullOrWhiteSpace(NewProductDescription) || string.IsNullOrWhiteSpace(SelectedApplicabilityType))
             {
                 Message = "Please enter valid product name, description and applicability type.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -139,6 +153,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 NewProductDescription = string.Empty;
                 SelectedApplicabilityType = "Administrativo";
                 Message = "Product added successfully.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
@@ -157,12 +172,14 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (SelectedProduct is null)
             {
                 Message = "Please select a product to update.";
+                MessageType = MessageType.Error;
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(NewProductName) || string.IsNullOrWhiteSpace(NewProductDescription) || string.IsNullOrWhiteSpace(SelectedApplicabilityType))
             {
                 Message = "Please enter valid product name, description and applicability type.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -176,11 +193,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
                     _productRepository.Update(SelectedProduct);
                     LoadData(); // Refresh list
                     Message = "Product updated successfully.";
+                    MessageType = MessageType.Success;
                 }
             }
             catch (Exception ex)
             {
                 Message = $"Error updating product: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -194,11 +213,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
                     LoadData(); // Refresh list
                     SelectedProduct = null; // Clear selection
                     Message = "Product deleted successfully.";
+                    MessageType = MessageType.Success;
                 }
             }
             catch (Exception ex)
             {
                 Message = $"Error deleting product: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -214,6 +235,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             NewProductDescription = string.Empty;
             SelectedApplicabilityType = "Administrativo";
             Message = string.Empty;
+            MessageType = MessageType.None;
         }
 
         private void UpdateProductFields()

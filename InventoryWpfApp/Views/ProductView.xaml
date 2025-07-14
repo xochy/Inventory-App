@@ -1,13 +1,13 @@
 ﻿<UserControl x:Class="InventoryWpfApp.Views.ProductView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:InventoryWpfApp.Views"
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="15">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -19,33 +19,63 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Product Management" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Grid.Row="0" Grid.ColumnSpan="2"/>
+        <TextBlock Text="Product Management" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Grid.ColumnSpan="2"/>
 
-        <TextBlock Text="Product Name:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
-        <TextBox Text="{Binding NewProductName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+        <!-- Input Fields -->
+        <TextBlock Text="Product Name:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
+        <TextBox Text="{Binding NewProductName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5"/>
 
-        <TextBlock Text="Description:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
-        <TextBox Text="{Binding NewProductDescription, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+        <TextBlock Text="Description:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
+        <TextBox Text="{Binding NewProductDescription, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5"/>
 
-        <TextBlock Text="Applicability Type:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
-        <ComboBox SelectedValue="{Binding SelectedApplicabilityType}" Grid.Row="3" Grid.Column="1" Margin="0,5,0,5" Padding="5">
+        <TextBlock Text="Applicability Type:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
+        <ComboBox SelectedValue="{Binding SelectedApplicabilityType}" SelectedValuePath="Content" Grid.Row="3" Grid.Column="1" Margin="0,5,0,5">
             <ComboBoxItem Content="Administrativo"/>
             <ComboBoxItem Content="Sindicalizado"/>
             <ComboBoxItem Content="Todos"/>
         </ComboBox>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,15,0,10">
-            <Button Content="Add Product" Command="{Binding AddProductCommand}" Margin="5" Padding="10"/>
-            <Button Content="Update Product" Command="{Binding UpdateProductCommand}" Margin="5" Padding="10"/>
-            <Button Content="Delete Product" Command="{Binding DeleteProductCommand}" Margin="5" Padding="10"/>
-            <Button Content="Clear Selection" Command="{Binding ClearSelectionCommand}" Margin="5" Padding="10"/>
+        <!-- Action Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,20,0,15">
+            <Button Command="{Binding AddProductCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Add Product"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding UpdateProductCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70E;" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Update Product"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding DeleteProductCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Delete Product"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding ClearSelectionCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Clear Selection"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
-        <TextBlock Text="{Binding Message}" Grid.Row="5" Grid.ColumnSpan="2" Margin="0,10,0,0"
-                   HorizontalAlignment="Center" Foreground="Blue" TextWrapping="Wrap"/>
+        <!-- Message Area -->
+        <TextBlock Text="{Binding Message}" Grid.Row="5" Grid.ColumnSpan="2"
+                   Style="{Binding MessageType, Converter={StaticResource MessageTypeToStyleConverter}}"/>
 
+        <!-- Product List -->
         <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
-                  AutoGenerateColumns="True" IsReadOnly="False" CanUserAddRows="False"
-                  Grid.Row="6" Grid.ColumnSpan="2" Margin="0,20,0,0"/>
+                  Grid.Row="6" Grid.ColumnSpan="2" Margin="0,20,0,0" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Product Id" Binding="{Binding ProductId}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                <DataGridTextColumn Header="Applicability Type" Binding="{Binding ApplicabilityType}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

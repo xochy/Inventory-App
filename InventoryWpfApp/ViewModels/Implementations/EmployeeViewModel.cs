@@ -1,6 +1,7 @@
 ﻿using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
+using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -82,6 +83,17 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        private MessageType _messageType;
+        public MessageType MessageType
+        {
+            get => _messageType;
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddEmployeeCommand { get; private set; }
         public ICommand UpdateEmployeeCommand { get; private set; }
         public ICommand DeleteEmployeeCommand { get; private set; }
@@ -114,6 +126,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             catch (Exception ex)
             {
                 Message = $"Error loading data: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -123,6 +136,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (string.IsNullOrWhiteSpace(NewEmployeeName) || SelectedGroupId <= 0)
             {
                 Message = "Please enter a valid employee name and select a group.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -134,10 +148,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 NewEmployeeName = string.Empty;
                 SelectedGroupId = 0; // Reset ComboBox
                 Message = "Employee added successfully.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
                 Message = $"Error adding employee: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -152,12 +168,14 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (SelectedEmployee is null)
             {
                 Message = "Please select an employee to update.";
+                MessageType = MessageType.Error;
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(NewEmployeeName) || SelectedGroupId <= 0)
             {
                 Message = "Please enter a valid employee name and select a group.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -171,10 +189,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 LoadData(); // Refresh list
 
                 Message = "Employee updated successfully.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
                 Message = $"Error updating employee: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -188,11 +208,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
                     LoadData(); // Refresh list
                     SelectedEmployee = null; // Clear selection
                     Message = "Employee deleted successfully.";
+                    MessageType = MessageType.Success;
                 }
             }
             catch (Exception ex)
             {
                 Message = $"Error deleting employee: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -207,6 +229,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             NewEmployeeName = string.Empty;
             SelectedGroupId = 0;
             Message = string.Empty;
+            MessageType = MessageType.None;
         }
 
         private void UpdateEmployeeFields()

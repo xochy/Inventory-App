@@ -1,12 +1,11 @@
 ﻿<UserControl x:Class="InventoryWpfApp.Views.DeliveryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:InventoryWpfApp.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="600">
-    <Grid Margin="15">
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="600">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -18,35 +17,64 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Register Inventory Delivery" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Grid.Row="0" Grid.ColumnSpan="2"/>
+        <TextBlock Text="Register Inventory Delivery" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Grid.ColumnSpan="3"/>
 
-        <TextBlock Text="Employee:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <!-- Employee Input -->
+        <TextBlock Text="Employee:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
+        <Button Grid.Row="1" Grid.Column="1" Command="{Binding RefreshEmployeesCommand}" 
+                Margin="0,5,5,5" ToolTip="Refresh Employees">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE72C;" FontSize="14" VerticalAlignment="Center" Margin="0,0,0,0"/>
+            </StackPanel>
+        </Button>
         <ComboBox ItemsSource="{Binding Employees}" SelectedValue="{Binding SelectedEmployeeId}"
                   DisplayMemberPath="Name" SelectedValuePath="EmployeeId"
-                  Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+                  Grid.Row="1" Grid.Column="2" Margin="0,5,0,5"/>
 
-        <TextBlock Text="Product:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <!-- Product Input -->
+        <TextBlock Text="Product:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding RefreshProductsCommand}" 
+                    Margin="0,5,5,5" ToolTip="Refresh Products">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE72C;" FontSize="14" VerticalAlignment="Center" Margin="0,0,0,0"/>
+            </StackPanel>
+        </Button>
         <ComboBox ItemsSource="{Binding Products}" SelectedValue="{Binding SelectedProductId}"
                   DisplayMemberPath="Name" SelectedValuePath="ProductId"
-                  Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+                  Grid.Row="2" Grid.Column="2" Margin="0,5,0,5"/>
 
-        <TextBlock Text="Available Size:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
+        <!-- Size Input -->
+        <TextBlock Text="Available Size:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
         <ComboBox ItemsSource="{Binding AvailableSizes}" SelectedValue="{Binding SelectedInventoryStockId}"
                   DisplayMemberPath="SizeValue" SelectedValuePath="InventoryStockId"
-                  Grid.Row="3" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+                  Grid.Row="3" Grid.Column="2" Margin="0,5,0,5"/>
 
-        <TextBlock Text="Quantity to Deliver:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,10,5"/>
-        <TextBox Text="{Binding QuantityToDeliver, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="0,5,0,5" Padding="5"/>
+        <!-- Quantity to Deliver Input -->
+        <TextBlock Text="Quantity to Deliver:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
+        <TextBox Text="{Binding QuantityToDeliver, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="2" Margin="0,5,0,5"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,20,0,10">
-            <Button Content="Register Delivery" Command="{Binding RegisterDeliveryCommand}" Margin="5" Padding="12"/>
-            <Button Content="Clear Fields" Command="{Binding ClearDeliveryFieldsCommand}" Margin="5" Padding="12"/>
+        <!-- Action Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,20,0,15">
+            <Button Command="{Binding RegisterDeliveryCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE734;" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Register Delivery"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding ClearDeliveryFieldsCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Clear Fields"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
-        <TextBlock Text="{Binding Message}" Grid.Row="6" Grid.ColumnSpan="2" Margin="0,10,0,0"
-                   HorizontalAlignment="Center" Foreground="Blue" TextWrapping="Wrap"/>
+        <!-- Message Area -->
+        <TextBlock Text="{Binding Message}" Grid.Row="6" Grid.ColumnSpan="3"
+                   Style="{Binding MessageType, Converter={StaticResource MessageTypeToStyleConverter}}"/>
     </Grid>
 </UserControl>

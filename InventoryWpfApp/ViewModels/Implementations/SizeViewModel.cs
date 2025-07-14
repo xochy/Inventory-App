@@ -1,6 +1,7 @@
 ﻿using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
+using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -70,6 +71,17 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        private MessageType _messageType;
+        public MessageType MessageType
+        {
+            get => _messageType;
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddSizeCommand { get; private set; }
         public ICommand UpdateSizeCommand { get; private set; }
         public ICommand DeleteSizeCommand { get; private set; }
@@ -101,6 +113,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             catch (Exception ex)
             {
                 Message = $"Error loading data: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -110,6 +123,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (string.IsNullOrWhiteSpace(NewSizeValue) || string.IsNullOrWhiteSpace(SelectedNotationType))
             {
                 Message = "Please enter valid size value and notation type.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -125,10 +139,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 NewSizeValue = string.Empty;
                 SelectedNotationType = "Americana";
                 Message = "Size added successfully.";
+                MessageType = MessageType.Success;
             }
             catch (Exception ex)
             {
                 Message = $"Error adding size: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -143,12 +159,14 @@ namespace InventoryWpfApp.ViewModels.Implementations
             if (SelectedSize is null)
             {
                 Message = "Please select a size to update.";
+                MessageType = MessageType.Error;
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(NewSizeValue) || string.IsNullOrWhiteSpace(SelectedNotationType))
             {
                 Message = "Please enter valid size value and notation type.";
+                MessageType = MessageType.Error;
                 return;
             }
 
@@ -161,11 +179,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
                     _sizeRepository.Update(SelectedSize);
                     LoadData(); // Refresh list
                     Message = "Size updated successfully.";
+                    MessageType = MessageType.Success;
                 }
             }
             catch (Exception ex)
             {
                 Message = $"Error updating size: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -179,11 +199,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
                     LoadData(); // Refresh list
                     SelectedSize = null; // Clear selection
                     Message = "Size deleted successfully.";
+                    MessageType = MessageType.Success;
                 }
             }
             catch (Exception ex)
             {
                 Message = $"Error deleting size: {ex.Message}";
+                MessageType = MessageType.Error;
             }
         }
 
@@ -198,6 +220,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
             NewSizeValue = string.Empty;
             SelectedNotationType = "Americana";
             Message = string.Empty;
+            MessageType = MessageType.None;
         }
 
         private void UpdateSizeFields()
