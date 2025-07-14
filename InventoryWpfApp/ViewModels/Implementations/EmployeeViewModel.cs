@@ -1,13 +1,16 @@
-﻿using InventoryWpfApp.Models;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
 {
+    /// <summary>
+    /// Represents the ViewModel for managing employees in the application.
+    /// </summary>
     public class EmployeeViewModel : BaseViewModel
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -99,15 +102,26 @@ namespace InventoryWpfApp.ViewModels.Implementations
         public ICommand DeleteEmployeeCommand { get; private set; }
         public ICommand ClearSelectionCommand { get; private set; }
 
-        public EmployeeViewModel(IEmployeeRepository employeeRepository, IGroupRepository groupRepository)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmployeeViewModel"/> class.
+        /// </summary>
+        public EmployeeViewModel(
+            IEmployeeRepository employeeRepository,
+            IGroupRepository groupRepository
+        )
         {
-            _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
-            _groupRepository = groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
+            _employeeRepository =
+                employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
+            _groupRepository =
+                groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
 
             LoadData();
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Initializes the commands for the ViewModel.
+        /// </summary>
         private void InitializeCommands()
         {
             AddEmployeeCommand = new RelayCommand(AddEmployee, CanAddEmployee);
@@ -116,11 +130,16 @@ namespace InventoryWpfApp.ViewModels.Implementations
             ClearSelectionCommand = new RelayCommand(ClearSelection);
         }
 
+        /// <summary>
+        /// Loads the initial data for employees and groups.
+        /// </summary>
         private void LoadData()
         {
             try
             {
-                Employees = new ObservableCollection<Employee>(_employeeRepository.GetAllWithGroupAndType());
+                Employees = new ObservableCollection<Employee>(
+                    _employeeRepository.GetAllWithGroupAndType()
+                );
                 Groups = new ObservableCollection<Group>(_groupRepository.GetAllWithEmployeeType());
             }
             catch (Exception ex)
@@ -130,6 +149,11 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Adds a new employee to the repository.
+        /// </summary>
+        /// <param name="parameter">The command parameter (not used).</param>
+        /// <exception cref="Exception">Set the error message</exception>
         private void AddEmployee(object parameter)
         {
             // Validate input
@@ -142,7 +166,11 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
             try
             {
-                var newEmployee = new Employee { Name = NewEmployeeName, GroupId = SelectedGroupId };
+                var newEmployee = new Employee
+                {
+                    Name = NewEmployeeName,
+                    GroupId = SelectedGroupId,
+                };
                 _employeeRepository.Add(newEmployee);
                 LoadData(); // Refresh list
                 NewEmployeeName = string.Empty;
@@ -157,11 +185,20 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the AddEmployee command can be executed.
+        /// </summary>
+        /// <param name="parameter"> The command parameter (not used).</param>
         private bool CanAddEmployee(object parameter)
         {
             return !string.IsNullOrWhiteSpace(NewEmployeeName) && SelectedGroupId > 0;
         }
 
+        /// <summary>
+        /// Updates the selected employee's details.
+        /// </summary>
+        /// <param name="parameter">The command parameter (not used).</param>
+        /// <exception cref="Exception">Set the error message</exception>"
         private void UpdateEmployee(object parameter)
         {
             // Validate if an employee is selected and input is valid
@@ -198,6 +235,11 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Deletes the selected employee from the repository.
+        /// </summary>
+        /// <param name="parameter">The command parameter (not used).</param>
+        /// <exception cref="Exception">Set the error message</exception>"
         private void DeleteEmployee(object parameter)
         {
             try
@@ -218,11 +260,19 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the Update or Delete commands can be executed.
+        /// </summary>
+        /// <param name="parameter">The command parameter (not used).</param>
         private bool CanUpdateOrDeleteEmployee(object parameter)
         {
             return SelectedEmployee != null;
         }
 
+        /// <summary>
+        /// Clears the selection of the employee and resets input fields.
+        /// </summary>
+        /// <param name="parameter">The command parameter (not used).</param>
         private void ClearSelection(object parameter)
         {
             SelectedEmployee = null;
@@ -232,6 +282,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             MessageType = MessageType.None;
         }
 
+        /// <summary>
+        /// Updates the fields for the selected employee.
+        /// </summary>
         private void UpdateEmployeeFields()
         {
             if (SelectedEmployee != null)

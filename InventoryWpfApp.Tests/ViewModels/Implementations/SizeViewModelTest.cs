@@ -2,11 +2,6 @@
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Implementations;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryWpfApp.Tests.ViewModels.Implementations
 {
@@ -18,11 +13,23 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             // Arrange
             var mockSizeRepository = new Mock<ISizeRepository>();
             var sizeViewModel = new SizeViewModel(mockSizeRepository.Object);
-            var originalSize = new Size { SizeId = 1, SizeValue = "L", NotationType = "Americana" };
-            var updatedSize = new Size { SizeId = 1, SizeValue = "44", NotationType = "Mexicana" };
+            var originalSize = new Size
+            {
+                SizeId = 1,
+                SizeValue = "L",
+                NotationType = "Americana",
+            };
+            var updatedSize = new Size
+            {
+                SizeId = 1,
+                SizeValue = "44",
+                NotationType = "Mexicana",
+            };
 
             // Setup the repository mock:
-            mockSizeRepository.Setup(repo => repo.GetAll()).Returns(new List<Size> { originalSize });
+            mockSizeRepository
+                .Setup(repo => repo.GetAll())
+                .Returns(new List<Size> { originalSize });
 
             var viewModel = new SizeViewModel(mockSizeRepository.Object);
 
@@ -36,10 +43,17 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             viewModel.UpdateSizeCommand.Execute(null);
 
             // Assert
-            mockSizeRepository.Verify(repo => repo.Update(It.Is<Size>(
-                s => s.SizeId == originalSize.SizeId &&
-                s.SizeValue == updatedSize.SizeValue &&
-                s.NotationType == updatedSize.NotationType)), Times.Once);
+            mockSizeRepository.Verify(
+                repo =>
+                    repo.Update(
+                        It.Is<Size>(s =>
+                            s.SizeId == originalSize.SizeId
+                            && s.SizeValue == updatedSize.SizeValue
+                            && s.NotationType == updatedSize.NotationType
+                        )
+                    ),
+                Times.Once
+            );
 
             Assert.Equal("Size updated successfully.", viewModel.Message);
         }
@@ -65,10 +79,17 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             // Arrange
             var mockSizeRepository = new Mock<ISizeRepository>();
             var sizeViewModel = new SizeViewModel(mockSizeRepository.Object);
-            var originalSize = new Size { SizeId = 1, SizeValue = "L", NotationType = "Americana" };
+            var originalSize = new Size
+            {
+                SizeId = 1,
+                SizeValue = "L",
+                NotationType = "Americana",
+            };
 
             // Setup the repository mock:
-            mockSizeRepository.Setup(repo => repo.GetAll()).Returns(new List<Size> { originalSize });
+            mockSizeRepository
+                .Setup(repo => repo.GetAll())
+                .Returns(new List<Size> { originalSize });
             var viewModel = new SizeViewModel(mockSizeRepository.Object);
 
             viewModel.SelectedSize = originalSize; // Set the size to be updated
@@ -99,9 +120,16 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             sizeViewModel.AddSizeCommand.Execute(null);
 
             // Assert
-            mockSizeRepository.Verify(repo => repo.Add(It.Is<Size>(
-                s => s.SizeValue == newSize.SizeValue &&
-                s.NotationType == newSize.NotationType)), Times.Once);
+            mockSizeRepository.Verify(
+                repo =>
+                    repo.Add(
+                        It.Is<Size>(s =>
+                            s.SizeValue == newSize.SizeValue
+                            && s.NotationType == newSize.NotationType
+                        )
+                    ),
+                Times.Once
+            );
             Assert.Equal("Size added successfully.", sizeViewModel.Message);
         }
 
@@ -128,15 +156,22 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             // Arrange
             var mockSizeRepository = new Mock<ISizeRepository>();
             var sizeViewModel = new SizeViewModel(mockSizeRepository.Object);
-            var sizeToDelete = new Size { SizeId = 1, SizeValue = "L", NotationType = "Americana" };
+            var sizeToDelete = new Size
+            {
+                SizeId = 1,
+                SizeValue = "L",
+                NotationType = "Americana",
+            };
 
             // Setup the repository mock:
-            mockSizeRepository.Setup(repo => repo.GetAll()).Returns(new List<Size> { sizeToDelete });
+            mockSizeRepository
+                .Setup(repo => repo.GetAll())
+                .Returns(new List<Size> { sizeToDelete });
             sizeViewModel.SelectedSize = sizeToDelete; // Set the size to be deleted
-            
+
             // Act
             sizeViewModel.DeleteSizeCommand.Execute(null);
-           
+
             // Assert
             mockSizeRepository.Verify(repo => repo.Delete(sizeToDelete.SizeId), Times.Once);
             Assert.Equal("Size deleted successfully.", sizeViewModel.Message);
@@ -163,10 +198,17 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             // Arrange
             var mockSizeRepository = new Mock<ISizeRepository>();
             var sizeViewModel = new SizeViewModel(mockSizeRepository.Object);
-            var sizeToSelect = new Size { SizeId = 1, SizeValue = "L", NotationType = "Americana" };
+            var sizeToSelect = new Size
+            {
+                SizeId = 1,
+                SizeValue = "L",
+                NotationType = "Americana",
+            };
 
             // Setup the repository mock:
-            mockSizeRepository.Setup(repo => repo.GetAll()).Returns(new List<Size> { sizeToSelect });
+            mockSizeRepository
+                .Setup(repo => repo.GetAll())
+                .Returns(new List<Size> { sizeToSelect });
             sizeViewModel.SelectedSize = sizeToSelect; // Set the size to be cleared
 
             // Act
@@ -184,8 +226,18 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             var mockSizeRepository = new Mock<ISizeRepository>();
             var sizes = new List<Size>
             {
-                new Size { SizeId = 1, SizeValue = "L", NotationType = "Americana" },
-                new Size { SizeId = 2, SizeValue = "M", NotationType = "Mexicana" }
+                new Size
+                {
+                    SizeId = 1,
+                    SizeValue = "L",
+                    NotationType = "Americana",
+                },
+                new Size
+                {
+                    SizeId = 2,
+                    SizeValue = "M",
+                    NotationType = "Mexicana",
+                },
             };
             // Setup the repository mock:
             mockSizeRepository.Setup(repo => repo.GetAll()).Returns(sizes);
@@ -193,7 +245,7 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
 
             // Act
             // LoadData(); is called in the constructor, so we don't need to call it explicitly here.
-            
+
             // Assert
             Assert.Equal(2, sizeViewModel.Sizes.Count);
             Assert.Contains(sizeViewModel.Sizes, s => s.SizeValue == "L");

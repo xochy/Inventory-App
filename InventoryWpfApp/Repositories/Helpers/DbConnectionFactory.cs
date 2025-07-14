@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Data;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace InventoryWpfApp.Repositories.Helpers
 {
@@ -23,7 +23,8 @@ namespace InventoryWpfApp.Repositories.Helpers
     {
         // IMPORTANT: Replace "YOUR_SERVER" with your SQL Server instance name
         // Example: "Data Source=.\\SQLEXPRESS;Initial Catalog=InventoryTechnicalTestDB;Integrated Security=True;TrustServerCertificate=True;"
-        private readonly string _connectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=InventoryTechnicalTestDB;Integrated Security=True;TrustServerCertificate=True;";
+        private readonly string _connectionString =
+            "Data Source=localhost\\SQLEXPRESS;Initial Catalog=InventoryTechnicalTestDB;Integrated Security=True;TrustServerCertificate=True;";
 
         /// <summary>
         /// Creates and opens a new SqlConnection.

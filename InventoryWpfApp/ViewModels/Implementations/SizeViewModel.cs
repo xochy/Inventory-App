@@ -1,13 +1,16 @@
-﻿using InventoryWpfApp.Models;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
 {
+    /// <summary>
+    /// Represents the ViewModel for managing sizes in the application.
+    /// </summary>
     public class SizeViewModel : BaseViewModel
     {
         private readonly ISizeRepository _sizeRepository;
@@ -87,14 +90,22 @@ namespace InventoryWpfApp.ViewModels.Implementations
         public ICommand DeleteSizeCommand { get; private set; }
         public ICommand ClearSelectionCommand { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the SizeViewModel class.
+        /// </summary>
+        /// <param name="sizeRepository">The size repository.</param>
         public SizeViewModel(ISizeRepository sizeRepository)
         {
-            _sizeRepository = sizeRepository ?? throw new ArgumentNullException(nameof(sizeRepository));
+            _sizeRepository =
+                sizeRepository ?? throw new ArgumentNullException(nameof(sizeRepository));
 
             LoadData();
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Initializes the commands for the ViewModel.
+        /// </summary>
         private void InitializeCommands()
         {
             AddSizeCommand = new RelayCommand(AddSize, CanAddSize);
@@ -103,6 +114,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             ClearSelectionCommand = new RelayCommand(ClearSelection);
         }
 
+        /// <summary>
+        /// Loads the data from the repository and initializes the default values.
+        /// </summary>
         private void LoadData()
         {
             try
@@ -117,10 +131,17 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Adds a new size to the repository.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void AddSize(object parameter)
         {
             // Validate input
-            if (string.IsNullOrWhiteSpace(NewSizeValue) || string.IsNullOrWhiteSpace(SelectedNotationType))
+            if (
+                string.IsNullOrWhiteSpace(NewSizeValue)
+                || string.IsNullOrWhiteSpace(SelectedNotationType)
+            )
             {
                 Message = "Please enter valid size value and notation type.";
                 MessageType = MessageType.Error;
@@ -132,7 +153,7 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 var newSize = new Size
                 {
                     SizeValue = NewSizeValue,
-                    NotationType = SelectedNotationType
+                    NotationType = SelectedNotationType,
                 };
                 _sizeRepository.Add(newSize);
                 LoadData(); // Refresh list
@@ -148,11 +169,21 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the AddSize command can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
+        /// <returns>True if the command can be executed, otherwise false.</returns>
         private bool CanAddSize(object parameter)
         {
-            return !string.IsNullOrWhiteSpace(NewSizeValue) && !string.IsNullOrWhiteSpace(SelectedNotationType);
+            return !string.IsNullOrWhiteSpace(NewSizeValue)
+                && !string.IsNullOrWhiteSpace(SelectedNotationType);
         }
 
+        /// <summary>
+        /// Updates the selected size in the repository.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void UpdateSize(object parameter)
         {
             // Validate if a size is selected  and input is valid
@@ -163,7 +194,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(NewSizeValue) || string.IsNullOrWhiteSpace(SelectedNotationType))
+            if (
+                string.IsNullOrWhiteSpace(NewSizeValue)
+                || string.IsNullOrWhiteSpace(SelectedNotationType)
+            )
             {
                 Message = "Please enter valid size value and notation type.";
                 MessageType = MessageType.Error;
@@ -189,6 +223,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the Update or Delete commands can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void DeleteSize(object parameter)
         {
             try
@@ -209,11 +247,19 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the Update or Delete commands can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private bool CanUpdateOrDeleteSize(object parameter)
         {
             return SelectedSize != null;
         }
 
+        /// <summary>
+        /// Clears the selection and resets the input fields.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void ClearSelection(object parameter)
         {
             SelectedSize = null;
@@ -223,6 +269,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             MessageType = MessageType.None;
         }
 
+        /// <summary>
+        /// Updates the size fields based on the selected size.
+        /// </summary>
         private void UpdateSizeFields()
         {
             if (SelectedSize != null)

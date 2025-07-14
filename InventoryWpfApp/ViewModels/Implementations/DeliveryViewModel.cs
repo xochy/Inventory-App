@@ -1,13 +1,16 @@
-﻿using InventoryWpfApp.Models;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
 {
+    /// <summary>
+    /// Represents the ViewModel for managing deliveries in the application.
+    /// </summary>
     public class DeliveryViewModel : BaseViewModel
     {
         private readonly IMovementRepository _movementRepository;
@@ -124,17 +127,33 @@ namespace InventoryWpfApp.ViewModels.Implementations
         public ICommand RefreshEmployeesCommand { get; private set; }
         public ICommand RefreshProductsCommand { get; private set; }
 
-        public DeliveryViewModel(IMovementRepository movementRepository, IEmployeeRepository employeeRepository, IProductRepository productRepository, IInventoryStockRepository inventoryStockRepository)
+        /// <summary>
+        /// Initializes a new instance of the DeliveryViewModel class.
+        /// </summary>
+        public DeliveryViewModel(
+            IMovementRepository movementRepository,
+            IEmployeeRepository employeeRepository,
+            IProductRepository productRepository,
+            IInventoryStockRepository inventoryStockRepository
+        )
         {
-            _movementRepository = movementRepository ?? throw new ArgumentNullException(nameof(movementRepository));
-            _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
-            _inventoryStockRepository = inventoryStockRepository ?? throw new ArgumentNullException(nameof(inventoryStockRepository));
+            _movementRepository =
+                movementRepository ?? throw new ArgumentNullException(nameof(movementRepository));
+            _employeeRepository =
+                employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
+            _productRepository =
+                productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _inventoryStockRepository =
+                inventoryStockRepository
+                ?? throw new ArgumentNullException(nameof(inventoryStockRepository));
 
             LoadData();
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Initializes the commands for the DeliveryViewModel.
+        /// </summary>
         private void InitializeCommands()
         {
             RegisterDeliveryCommand = new RelayCommand(RegisterDelivery, CanRegisterDelivery);
@@ -144,6 +163,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             RefreshProductsCommand = new RelayCommand(RefreshProducts);
         }
 
+        /// <summary>
+        /// Refreshes the list of employees.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void RefreshEmployees(object parameter = null)
         {
             try
@@ -157,6 +180,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Refreshes the list of products.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void RefreshProducts(object parameter = null)
         {
             try
@@ -170,6 +197,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Loads the initial data for the DeliveryViewModel.
+        /// </summary>
         private void LoadData()
         {
             try
@@ -185,13 +215,18 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Loads available sizes for the selected product.
+        /// </summary>
         private void LoadAvailableSizesForSelectedProduct()
         {
             if (SelectedProductId > 0)
             {
                 try
                 {
-                    AvailableSizes = new ObservableCollection<InventoryStock>(_inventoryStockRepository.GetAvailableSizesForProduct(SelectedProductId));
+                    AvailableSizes = new ObservableCollection<InventoryStock>(
+                        _inventoryStockRepository.GetAvailableSizesForProduct(SelectedProductId)
+                    );
                     SelectedInventoryStockId = 0; // Reset selected size
                 }
                 catch (Exception ex)
@@ -206,6 +241,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Registers a delivery for the selected inventory stock.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void RegisterDelivery(object parameter)
         {
             if (!int.TryParse(QuantityToDeliver, out int quantity) || quantity <= 0)
@@ -217,7 +256,11 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
             try
             {
-                _movementRepository.RegisterDelivery(SelectedInventoryStockId, SelectedEmployeeId, quantity);
+                _movementRepository.RegisterDelivery(
+                    SelectedInventoryStockId,
+                    SelectedEmployeeId,
+                    quantity
+                );
                 Message = "Delivery registered successfully.";
                 MessageType = MessageType.Success;
                 ClearDeliveryFields(null);
@@ -230,12 +273,23 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the RegisterDelivery command can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
+        /// <returns>True if all required fields are valid, otherwise false.</returns>
         private bool CanRegisterDelivery(object parameter)
         {
-            return SelectedEmployeeId > 0 && SelectedInventoryStockId > 0 &&
-                   int.TryParse(QuantityToDeliver, out int quantity) && quantity > 0;
+            return SelectedEmployeeId > 0
+                && SelectedInventoryStockId > 0
+                && int.TryParse(QuantityToDeliver, out int quantity)
+                && quantity > 0;
         }
 
+        /// <summary>
+        /// Clears the delivery fields and resets the state.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void ClearDeliveryFields(object parameter)
         {
             SelectedEmployeeId = 0;

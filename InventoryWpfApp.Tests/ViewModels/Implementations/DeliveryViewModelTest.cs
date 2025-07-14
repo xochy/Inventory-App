@@ -57,7 +57,10 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
             deliveryViewModel.RegisterDeliveryCommand.Execute(null);
 
             // Assert
-            mockMovementRepository.Verify(m => m.RegisterDelivery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            mockMovementRepository.Verify(
+                m => m.RegisterDelivery(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()),
+                Times.Never
+            );
             Assert.Equal("Invalid quantity. Must be a positive number.", deliveryViewModel.Message);
         }
 
@@ -83,7 +86,7 @@ namespace InventoryWpfApp.Tests.ViewModels.Implementations
 
             // Act
             deliveryViewModel.ClearDeliveryFieldsCommand.Execute(null);
-            
+
             // Assert
             Assert.Equal(0, deliveryViewModel.SelectedInventoryStockId);
             Assert.Equal(0, deliveryViewModel.SelectedEmployeeId);

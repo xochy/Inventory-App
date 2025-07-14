@@ -1,13 +1,16 @@
-﻿using InventoryWpfApp.Models;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using InventoryWpfApp.Models;
 using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
 {
+    /// <summary>
+    /// Represents the ViewModel for managing inventory stock in the application.
+    /// </summary>
     public class InventoryStockViewModel : BaseViewModel
     {
         private readonly IInventoryStockRepository _inventoryStockRepository;
@@ -136,17 +139,32 @@ namespace InventoryWpfApp.ViewModels.Implementations
         public ICommand ClearSelectionCommand { get; private set; }
         public ICommand RefreshProductsCommand { get; private set; }
         public ICommand RefreshSizesCommand { get; private set; }
+        public ICommand RefreshStockItemsCommand { get; private set; }
 
-        public InventoryStockViewModel(IInventoryStockRepository inventoryStockRepository, IProductRepository productRepository, ISizeRepository sizeRepository)
+        /// <summary>
+        /// Initializes a new instance of the InventoryStockViewModel class.
+        /// </summary>
+        public InventoryStockViewModel(
+            IInventoryStockRepository inventoryStockRepository,
+            IProductRepository productRepository,
+            ISizeRepository sizeRepository
+        )
         {
-            _inventoryStockRepository = inventoryStockRepository ?? throw new ArgumentNullException(nameof(inventoryStockRepository));
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
-            _sizeRepository = sizeRepository ?? throw new ArgumentNullException(nameof(sizeRepository));
+            _inventoryStockRepository =
+                inventoryStockRepository
+                ?? throw new ArgumentNullException(nameof(inventoryStockRepository));
+            _productRepository =
+                productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _sizeRepository =
+                sizeRepository ?? throw new ArgumentNullException(nameof(sizeRepository));
 
             LoadData();
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Initializes the commands for the ViewModel.
+        /// </summary>
         private void InitializeCommands()
         {
             AddOrUpdateStockCommand = new RelayCommand(AddOrUpdateStock, CanAddOrUpdateStock);
@@ -156,8 +174,13 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
             RefreshProductsCommand = new RelayCommand(RefreshProducts);
             RefreshSizesCommand = new RelayCommand(RefreshSizes);
+            RefreshStockItemsCommand = new RelayCommand(RefreshStockItems);
         }
 
+        /// <summary>
+        /// Refreshes the list of products.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void RefreshProducts(object parameter = null)
         {
             try
@@ -171,6 +194,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Refreshes the list of sizes.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void RefreshSizes(object parameter = null)
         {
             try
@@ -184,11 +211,35 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Refreshes the list of stock items.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
+        private void RefreshStockItems(object parameter = null)
+        {
+            try
+            {
+                StockItems = new ObservableCollection<InventoryStock>(
+                    _inventoryStockRepository.GetStockDetails()
+                );
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing stock items: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
+        }
+
+        /// <summary>
+        /// Loads the initial data from the repositories and sets default values.
+        /// </summary>
         private void LoadData()
         {
             try
             {
-                StockItems = new ObservableCollection<InventoryStock>(_inventoryStockRepository.GetStockDetails());
+                StockItems = new ObservableCollection<InventoryStock>(
+                    _inventoryStockRepository.GetStockDetails()
+                );
                 Products = new ObservableCollection<Product>(_productRepository.GetAll());
                 Sizes = new ObservableCollection<Size>(_sizeRepository.GetAll());
             }
@@ -199,6 +250,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Adds or updates stock in the repository.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void AddOrUpdateStock(object parameter)
         {
             if (!int.TryParse(QuantityInput, out int quantity) || quantity <= 0)
@@ -216,7 +271,12 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
             try
             {
-                _inventoryStockRepository.AddOrUpdateStock(SelectedProductId, SelectedSizeId, quantity, minStockLimit);
+                _inventoryStockRepository.AddOrUpdateStock(
+                    SelectedProductId,
+                    SelectedSizeId,
+                    quantity,
+                    minStockLimit
+                );
                 LoadData();
                 ClearSelection(null); // Clear fields and message
                 Message = "Stock added/updated successfully.";
@@ -229,13 +289,24 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the Add or Update commands can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private bool CanAddOrUpdateStock(object parameter)
         {
-            return SelectedProductId > 0 && SelectedSizeId > 0 &&
-                   int.TryParse(QuantityInput, out int quantity) && quantity > 0 &&
-                   int.TryParse(MinStockLimitInput, out int minLimit) && minLimit >= 0;
+            return SelectedProductId > 0
+                && SelectedSizeId > 0
+                && int.TryParse(QuantityInput, out int quantity)
+                && quantity > 0
+                && int.TryParse(MinStockLimitInput, out int minLimit)
+                && minLimit >= 0;
         }
 
+        /// <summary>
+        /// Updates the existing stock item with new values.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void UpdateExistingStock(object parameter)
         {
             if (SelectedStockItem is null)
@@ -274,11 +345,20 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Checks if the Update or Delete commands can be executed.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
+        /// <returns>True if a stock item is selected, otherwise false.</returns>
         private bool CanUpdateOrDeleteStock(object parameter)
         {
             return SelectedStockItem != null;
         }
 
+        /// <summary>
+        /// Deletes the selected stock item from the repository.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void DeleteStock(object parameter)
         {
             try
@@ -299,6 +379,10 @@ namespace InventoryWpfApp.ViewModels.Implementations
             }
         }
 
+        /// <summary>
+        /// Clears the selection and resets the input fields.
+        /// </summary>
+        /// <param name="parameter">Command parameter (not used).</param>
         private void ClearSelection(object parameter)
         {
             SelectedStockItem = null;
@@ -310,6 +394,9 @@ namespace InventoryWpfApp.ViewModels.Implementations
             MessageType = MessageType.None; // Reset message type
         }
 
+        /// <summary>
+        /// Updates the stock fields based on the selected stock item.
+        /// </summary>
         private void UpdateStockFields()
         {
             if (SelectedStockItem != null)

@@ -370,6 +370,12 @@
         <Setter Property="Padding" Value="10,0"/>
         <Setter Property="Margin" Value="10,0"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="TabControl">
