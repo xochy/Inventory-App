@@ -22,7 +22,7 @@
 
         <!-- Name Input -->
         <TextBlock Text="Employee Name:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
-        <TextBox Text="{Binding NewEmployeeName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5"/>
+        <TextBox Text="{Binding NewEmployeeName, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5"/>
 
         <!-- Group Selection -->
         <TextBlock Text="Group:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>

@@ -22,7 +22,7 @@
 
         <!-- Input Fields -->
         <TextBlock Text="Size Value:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
-        <TextBox Text="{Binding NewSizeValue, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5"/>
+        <TextBox Text="{Binding NewSizeValue, UpdateSourceTrigger=PropertyChanged}" MaxLength="20" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5"/>
 
         <TextBlock Text="Notation Type:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
         <ComboBox SelectedValue="{Binding SelectedNotationType}" SelectedValuePath="Content" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5">
