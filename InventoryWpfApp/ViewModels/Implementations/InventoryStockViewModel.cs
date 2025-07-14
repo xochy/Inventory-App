@@ -3,12 +3,7 @@ using InventoryWpfApp.Repositories.Contracts;
 using InventoryWpfApp.ViewModels.Base;
 using InventoryWpfApp.ViewModels.Base.Enums;
 using InventoryWpfApp.ViewModels.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace InventoryWpfApp.ViewModels.Implementations
@@ -139,6 +134,8 @@ namespace InventoryWpfApp.ViewModels.Implementations
         public ICommand UpdateStockCommand { get; private set; } // For modifying only current quantity/min limit of existing record
         public ICommand DeleteStockCommand { get; private set; }
         public ICommand ClearSelectionCommand { get; private set; }
+        public ICommand RefreshProductsCommand { get; private set; }
+        public ICommand RefreshSizesCommand { get; private set; }
 
         public InventoryStockViewModel(IInventoryStockRepository inventoryStockRepository, IProductRepository productRepository, ISizeRepository sizeRepository)
         {
@@ -156,6 +153,35 @@ namespace InventoryWpfApp.ViewModels.Implementations
             UpdateStockCommand = new RelayCommand(UpdateExistingStock, CanUpdateOrDeleteStock);
             DeleteStockCommand = new RelayCommand(DeleteStock, CanUpdateOrDeleteStock);
             ClearSelectionCommand = new RelayCommand(ClearSelection);
+
+            RefreshProductsCommand = new RelayCommand(RefreshProducts);
+            RefreshSizesCommand = new RelayCommand(RefreshSizes);
+        }
+
+        private void RefreshProducts(object parameter = null)
+        {
+            try
+            {
+                Products = new ObservableCollection<Product>(_productRepository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing products: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
+        }
+
+        private void RefreshSizes(object parameter = null)
+        {
+            try
+            {
+                Sizes = new ObservableCollection<Size>(_sizeRepository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing sizes: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
         }
 
         private void LoadData()

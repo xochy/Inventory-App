@@ -1,5 +1,4 @@
-﻿<!-- Views/MovementHistoryView.xaml -->
-<UserControl x:Class="InventoryWpfApp.Views.MovementHistoryView"
+﻿<UserControl x:Class="InventoryWpfApp.Views.MovementHistoryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,7 +12,26 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Movement History" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0"/>
-        <DataGrid ItemsSource="{Binding Movements}" Grid.Row="1" Margin="0,0,0,15"/>
+
+        <!-- Movement History List -->
+        <DataGrid ItemsSource="{Binding Movements}" Grid.Row="1" Margin="0,0,0,15" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Movement Id" Binding="{Binding MovementId}" />
+                <DataGridTextColumn Header="Movement Date" Binding="{Binding MovementDate}" />
+                <DataGridTextColumn Header="Movement Type" Binding="{Binding MovementType}" />
+                <DataGridTextColumn Header="Quantity Moved" Binding="{Binding QuantityMoved}" />
+                <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" />
+                <DataGridTextColumn Header="Product Description" Binding="{Binding ProductDescription}" />
+                <DataGridTextColumn Header="Product Size" Binding="{Binding ProductSize}" />
+                <DataGridTextColumn Header="Size Notation" Binding="{Binding SizeNotation}" />
+                <DataGridTextColumn Header="Remaining Stock" Binding="{Binding RemainingStock}" />
+                <DataGridTextColumn Header="Minimun Stock Limit" Binding="{Binding MinStockLimit}" />
+                <DataGridTextColumn Header="Employee Name" Binding="{Binding EmployeeName}" />
+                <DataGridTextColumn Header="Employee Group" Binding="{Binding EmployeeGroup}" />
+                <DataGridTextColumn Header="Employee Type" Binding="{Binding EmployeeType}" />
+                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left">
             <Button Command="{Binding RefreshMovementsCommand}">

@@ -341,7 +341,7 @@
         <Setter Property="Foreground" Value="{StaticResource AccentColor}"/>
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeSubtitle}"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="BorderBrush" Value="{StaticResource LightTextColor}"/>
         <Setter Property="Padding" Value="10,8"/>
@@ -368,6 +368,7 @@
     <Style TargetType="DataGridCell">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="Margin" Value="10,0"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
