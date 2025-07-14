@@ -1,5 +1,4 @@
-﻿<!-- Views/EmployeeView.xaml -->
-<UserControl x:Class="InventoryWpfApp.Views.EmployeeView"
+﻿<UserControl x:Class="InventoryWpfApp.Views.EmployeeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,7 +6,6 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="20">
-        <!-- Increased margin for overall spacing -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -22,11 +20,11 @@
 
         <TextBlock Text="Employee Management" Style="{StaticResource TitleTextBlockStyle}" Grid.Row="0" Grid.ColumnSpan="2"/>
 
-        <!-- Input Fields -->
+        <!-- Name Input -->
         <TextBlock Text="Employee Name:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
-        <!-- Adjusted margin -->
         <TextBox Text="{Binding NewEmployeeName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5"/>
 
+        <!-- Group Selection -->
         <TextBlock Text="Group:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,15,5"/>
         <ComboBox ItemsSource="{Binding Groups}" SelectedValue="{Binding SelectedGroupId}"
                   DisplayMemberPath="Name" SelectedValuePath="GroupId"

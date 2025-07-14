@@ -121,6 +121,8 @@ namespace InventoryWpfApp.ViewModels.Implementations
 
         public ICommand RegisterDeliveryCommand { get; private set; }
         public ICommand ClearDeliveryFieldsCommand { get; private set; }
+        public ICommand RefreshEmployeesCommand { get; private set; }
+        public ICommand RefreshProductsCommand { get; private set; }
 
         public DeliveryViewModel(IMovementRepository movementRepository, IEmployeeRepository employeeRepository, IProductRepository productRepository, IInventoryStockRepository inventoryStockRepository)
         {
@@ -137,6 +139,35 @@ namespace InventoryWpfApp.ViewModels.Implementations
         {
             RegisterDeliveryCommand = new RelayCommand(RegisterDelivery, CanRegisterDelivery);
             ClearDeliveryFieldsCommand = new RelayCommand(ClearDeliveryFields);
+
+            RefreshEmployeesCommand = new RelayCommand(RefreshEmployees);
+            RefreshProductsCommand = new RelayCommand(RefreshProducts);
+        }
+
+        private void RefreshEmployees(object parameter = null)
+        {
+            try
+            {
+                Employees = new ObservableCollection<Employee>(_employeeRepository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing employees: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
+        }
+
+        private void RefreshProducts(object parameter = null)
+        {
+            try
+            {
+                Products = new ObservableCollection<Product>(_productRepository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Message = $"Error refreshing products: {ex.Message}";
+                MessageType = MessageType.Error;
+            }
         }
 
         private void LoadData()
